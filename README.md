@@ -3,9 +3,9 @@
 Employed CUDA programming to perform vector addition using GPU kernel function, kernel grids, warps, and blocks using Global, shared, and constant memory.
 =======
 # Vector Addition (CUDA)
-In this tutorial, we will look at a simple vector addition program, which is often used as the "Hello, World!" of GPU computing. We will assume an understanding of basic CUDA concepts, such as kernel functions and thread blocks. If you are not already familiar with such concepts, there are links at the bottom of this page that will show you where to begin.
 
-Let's walk through the following CUDA C vector addition program:
+
+CUDA C vector addition program:
 
 ```c
 #include <stdio.h>
@@ -92,15 +92,14 @@ int main()
     return 0;
 }
 ```
-
-We'll ignore the `add_vectors` "kernel" function for the moment and jump down to the main function. Here, we first determine the number of bytes of memory required for an array with N double precision elements:
+ Ignoring the `add_vectors` "kernel" function for the moment and jump down to the main function. Here, we first determine the number of bytes of memory required for an array with N double precision elements:
 
 ```c
     // Number of bytes to allocate for N doubles
     size_t bytes = N*sizeof(double);
 ```
 
-Next, we allocate memory on the CPU for arrays A, B and C:
+ Allocating memory on the CPU for arrays A, B and C:
 
 ```c
     // Allocate memory for arrays A, B, and C on host
@@ -109,7 +108,7 @@ Next, we allocate memory on the CPU for arrays A, B and C:
     double *C = (double*)malloc(bytes);
 ```
 
-Now we allocate memory on the GPU for arrays d\_A, d\_B, and d\_C (these variables are prefixed with "d_" to distinguish them as "device variables", but they can be named differently):
+ Allocating memory on the GPU for arrays d\_A, d\_B, and d\_C (these variables are prefixed with "d_" to distinguish them as "device variables", but they can be named differently):
 
 ```c
     // Allocate memory for arrays d_A, d_B, and d_C on device
@@ -119,7 +118,7 @@ Now we allocate memory on the GPU for arrays d\_A, d\_B, and d\_C (these variabl
     cudaMalloc(&d_C, bytes);
 ```
 
-Here, we fill the arrays A and B on the CPU:
+ Filling the arrays A and B on the CPU:
 
 ```c
     // Fill host arrays A and B
@@ -130,7 +129,7 @@ Here, we fill the arrays A and B on the CPU:
     }
 ```
 
-Now we set the execution configuration parameters in preparation for launching the kernel function on the GPU. The `ceil` funciton is needed to ensure there are enough blocks in the grid to cover all N elements of the arrays.
+Setting the execution configuration parameters in preparation for launching the kernel function on the GPU. The `ceil` funciton is needed to ensure there are enough blocks in the grid to cover all N elements of the arrays.
 
 ```c
     // Set execution configuration parameters
@@ -140,7 +139,7 @@ Now we set the execution configuration parameters in preparation for launching t
     int blk_in_grid = ceil( float(N) / thr_per_blk );
 ```
 
-Now we launch the kernel function on the GPU:
+Launching the kernel function on the GPU:
 
 ```c
     // Launch kernel
@@ -165,7 +164,7 @@ Now that the results of the vection addition have been stored in array d\_C on t
     cudaMemcpy(C, d_C, bytes, cudaMemcpyDeviceToHost);
 ```
 
-Now we check to make sure we received the correct results from the GPU:
+Checking to make sure we received the correct results from the GPU:
 
 ```c
     // Verify results
@@ -180,7 +179,7 @@ Now we check to make sure we received the correct results from the GPU:
     }
 ```
 
-And finally, we can free memory on the CPU:
+ Freeing memory on the CPU:
 
 ```c
     // Free CPU memory
@@ -189,7 +188,7 @@ And finally, we can free memory on the CPU:
     free(C);
 ```
 
-And free the memory on the GPU:
+Freeing the memory on the GPU:
 
 ```c
     // Free GPU memory
@@ -200,25 +199,25 @@ And free the memory on the GPU:
 
 ## Compiling and Running on Summit
 
-To run this program on Summit, you must first load the CUDA module:
+To run this program on Summit, first loading the CUDA module:
 
 ```
 $ module load cuda
 ```
 
-Now compile the program:
+Compiling the program:
 
 ```
 $ make
 ```
 
-Now submit the job using the `submit.lsf` batch script (make sure to change `PROJ123` to a project you are associated with:
+Submitting the job using the `submit.lsf` batch script (make sure to change `PROJ123` to a project you are associated with:
 
 ```
 $ bsub submit.lsf
 ```
 
-You can check the status of your job with the `jobstat` command. Once your job has completed, you can view the results in the output file named `add_vec.JOBID`
+Checking the status of your job with the `jobstat` command. Once your job has completed, viewing the results in the output file named `add_vec.JOBID`
 
 ```
 $ cat add_vec.JOBID
@@ -242,4 +241,5 @@ CUDA C Programming Model: <a href="https://docs.nvidia.com/cuda/cuda-c-programmi
 
 ## Problems?
 If you see a problem with the code or have suggestions to improve it, feel free to open an issue.
+Written by Ritwik Ashok
 >>>>>>> 51b03e4 (first commit)
